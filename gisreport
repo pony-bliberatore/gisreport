@@ -1,0 +1,29 @@
+#!/bin/bash
+ 
+#Too lazy to do two downloads so use Libreoffice to convert the xlsx to csv programattically in thie script
+/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to csv "/Users/brentliberatore/Report Data/UmpireListExport.xlsx" --outdir "/Users/brentliberatore/Report Data/"
+
+# Copy the original csv so we don't damage it
+cp "/Users/brentliberatore/Report Data/UmpireListExport.csv" "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv"
+
+# Remove that annoying top line
+sed -i '' '1d' "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv"
+
+# Copy header line to part 1 temp file
+head -1 "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv" >> "/Users/brentliberatore/Report Data/UmpireListExport-temppt1.csv"
+
+#Filter and copy column 11 (Insurance=Yes) and column 15 (Paid=Yes) to part 2 temp file
+awk -F, '$11 ~ /Yes/ && $15 ~ /Paid/ {print}' "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv" > "/Users/brentliberatore/Report Data/UmpireListExport-temppt2.csv"
+
+#Combine the temp files to the finished product csv
+cat "/Users/brentliberatore/Report Data/UmpireListExport-temppt1.csv" "/Users/brentliberatore/Report Data/UmpireListExport-temppt2.csv" > "/Users/brentliberatore/Report Data/gisumpirereport.csv"
+
+# Cleanup nasty temp files
+rm "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv"
+rm "/Users/brentliberatore/Report Data/UmpireListExport-temppt1.csv"
+rm "/Users/brentliberatore/Report Data/UmpireListExport-temppt2.csv"
+
+filenamedate=$(date +%Y%m%d)
+mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < ~/bin/tempfiles/gisemailtext.txt -a "/Users/brentliberatore/Report Data/gisumpirereport.csv"
+
+exit 0
