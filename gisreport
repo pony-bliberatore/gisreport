@@ -23,6 +23,7 @@ rm "/Users/brentliberatore/Report Data/UmpireListExport-temp.csv"
 rm "/Users/brentliberatore/Report Data/UmpireListExport-temppt1.csv"
 rm "/Users/brentliberatore/Report Data/UmpireListExport-temppt2.csv"
 
+# Send email to GIS with attachment
 filenamedate=$(date +%Y%m%d)
 mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < ~/bin/tempfiles/gisemailtext.txt -a "/Users/brentliberatore/Report Data/gisumpirereport.csv"
 
