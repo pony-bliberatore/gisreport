@@ -1,4 +1,6 @@
 #!/bin/bash
+
+printf "Starting GIS Report Script.\n"
  
 #Download Umpire Data to local CSV file for processing
 ~/bin/gam/gam user b.liberatore@pony.org get drivefile id 1EqGMnyitYCMjS1IcmwaIuS16OBxMunmIMS9l7WSl21s format csv targetfolder .
@@ -19,15 +21,19 @@ awk -F, '$11 ~ /Yes/ && $15 ~ /Paid/ {print}' "./UmpireListExport-temp.csv" > ".
 cat "./UmpireListExport-temppt1.csv" "./UmpireListExport-temppt2.csv" > "./gisumpirereport.csv"
 
 # Create temporary file with text for email.
+printf "Generating Email Content Temporary File.\n"
 printf "Please find attached the latest report for Umpire Insurance Sales from PONY Baseball and Softball for Gagliardi Insurance Services.\n" >> "./gisemailtext.txt"
 printf "\n" >> "./gisemailtext.txt"
 printf "PONY Tech Support\n" >> "./gisemailtext.txt"
 
 # Send email to GIS with attachment
+printf "Emailing the file to GIS.\n"
 filenamedate=$(date +%Y%m%d)
 mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
+# mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
 
 # Cleanup nasty temp files
+printf "Deleting all the temporary files.\n"
 rm "./UmpireListExport.csv"
 rm "./UmpireListExport-temp.csv"
 rm "./UmpireListExport-temppt1.csv"
@@ -35,4 +41,5 @@ rm "./UmpireListExport-temppt2.csv"
 rm "./gisemailtext.txt"
 rm "./gisumpirereport.csv"
 
+printf "Exiting the Script.\n"
 exit 0
