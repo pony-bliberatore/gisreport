@@ -55,8 +55,8 @@ printf "PONY Tech Support\n" >> "./gisemailtext.txt"
 # Send email to GIS with attachment
 printf "Emailing the file to GIS.\n"
 filenamedate=$(date +%Y%m%d)
-# mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
-mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
+mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
+# mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
 
 # Cleanup nasty temp files
 printf "Postcleaning all the GISREPORT temporary files.\n"
