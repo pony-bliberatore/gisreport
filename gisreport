@@ -1,6 +1,15 @@
 #!/bin/bash
 # Coding by Brent J. Liberatore - b.liberatore@pony.org
 
+# Cleanup nasty temp files
+printf "Precleaning all the GISREPORT temporary files.\n"
+rm "./UmpireListExport.csv" > /dev/null 2>&1
+rm "./UmpireListExport-temp.csv" > /dev/null 2>&1
+rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1 
+rm "./UmpireListExport-temppt2.csv" > /dev/null 2>&1
+rm "./gisemailtext.txt" > /dev/null 2>&1
+rm "./gisumpirereport.csv" > /dev/null 2>&1
+
 printf "Starting GIS Report Script.\n"
  
 #Download Umpire Data to local CSV file for processing
@@ -10,7 +19,23 @@ printf "Starting GIS Report Script.\n"
 cp "./UmpireListExport.csv" "./UmpireListExport-temp.csv"
 
 # Remove that annoying top line
-sed -i '' '1d' "./UmpireListExport-temp.csv"
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+printf "The script is running on $machine\n"
+if [ "$machine" == "Mac" ]
+    then sed -i '' '1d' "./UmpireListExport-temp.csv"
+printf "Processed with the sed Mac variant.\n"
+fi
+if [ "$machine" == "Linux" ]
+    then sed --in-place='' '1d' "./UmpireListExport-temp.csv"
+printf "Processed with the sed Linux variant.\n"
+fi
 
 # Copy header line to part 1 temp file
 head -1 "./UmpireListExport-temp.csv" >> "./UmpireListExport-temppt1.csv"
@@ -34,13 +59,13 @@ filenamedate=$(date +%Y%m%d)
 mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
 
 # Cleanup nasty temp files
-printf "Deleting all the temporary files.\n"
-rm "./UmpireListExport.csv"
-rm "./UmpireListExport-temp.csv"
-rm "./UmpireListExport-temppt1.csv"
-rm "./UmpireListExport-temppt2.csv"
-rm "./gisemailtext.txt"
-rm "./gisumpirereport.csv"
+printf "Postcleaning all the GISREPORT temporary files.\n"
+rm "./UmpireListExport.csv" > /dev/null 2>&1
+rm "./UmpireListExport-temp.csv" > /dev/null 2>&1
+rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1
+rm "./UmpireListExport-temppt2.csv" > /dev/null 2>&1
+rm "./gisemailtext.txt" > /dev/null 2>&1
+rm "./gisumpirereport.csv" > /dev/null 2>&1
 
 printf "Exiting the Script.\n"
 exit 0
