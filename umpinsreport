@@ -2,16 +2,16 @@
 # Coding by Brent J. Liberatore - b.liberatore@pony.org
 
 # Cleanup nasty temp files
-printf "Precleaning all the GISREPORT temporary files.\n"
+printf "Precleaning all the Umpire Insurance temporary files.\n"
 rm "./UmpireListExport.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temp.csv" > /dev/null 2>&1
-rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1 
+rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temppt2.csv" > /dev/null 2>&1
-rm "./gisemailtext.txt" > /dev/null 2>&1
-rm "./gisumpirereport.csv" > /dev/null 2>&1
+rm "./umpinsemailtext.txt" > /dev/null 2>&1
+rm "./umpinsumpirereport.csv" > /dev/null 2>&1
 
-printf "Starting GIS Report Script.\n"
- 
+printf "Starting Umpire Insurance Report Script.\n"
+
 #Download Umpire Data to local CSV file for processing
 ~/bin/gam/gam user b.liberatore@pony.org get drivefile id 1EqGMnyitYCMjS1IcmwaIuS16OBxMunmIMS9l7WSl21s format csv targetfolder .
 
@@ -44,28 +44,28 @@ head -1 "./UmpireListExport-temp.csv" >> "./UmpireListExport-temppt1.csv"
 awk -F, '$11 ~ /Yes/ && $15 ~ /Paid/ {print}' "./UmpireListExport-temp.csv" > "./UmpireListExport-temppt2.csv"
 
 #Combine the temp files to the finished product csv
-cat "./UmpireListExport-temppt1.csv" "./UmpireListExport-temppt2.csv" > "./gisumpirereport.csv"
+cat "./UmpireListExport-temppt1.csv" "./UmpireListExport-temppt2.csv" > "./umpinsumpirereport.csv"
 
 # Create temporary file with text for email.
 printf "Generating Email Content Temporary File.\n"
-printf "Please find attached the latest report for Umpire Insurance Sales from PONY Baseball and Softball for Gagliardi Insurance Services.\n" >> "./gisemailtext.txt"
-printf "\n" >> "./gisemailtext.txt"
-printf "PONY Tech Support\n" >> "./gisemailtext.txt"
+printf "Please find attached the latest report for Umpire Insurance Sales from PONY Baseball and Softball.\n" >> "./umpinsemailtext.txt"
+printf "\n" >> "./umpinsemailtext.txt"
+printf "PONY Tech Support\n" >> "./umpinsemailtext.txt"
 
 # Send email to GIS with attachment
 printf "Emailing the file to GIS.\n"
 filenamedate=$(date +%Y%m%d)
-mutt -s "PONY Umpire Report $filenamedate" pchavez@gsportsinsurance.com -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
-# mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./gisemailtext.txt" -a "./gisumpirereport.csv"
+mutt -s "PONY Umpire Report $filenamedate" pony@mestmaker.com -c b.liberatore@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
+# mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
 
 # Cleanup nasty temp files
-printf "Postcleaning all the GISREPORT temporary files.\n"
+printf "Postcleaning all the Umpire Insurance temporary files.\n"
 rm "./UmpireListExport.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temp.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temppt2.csv" > /dev/null 2>&1
-rm "./gisemailtext.txt" > /dev/null 2>&1
-rm "./gisumpirereport.csv" > /dev/null 2>&1
+rm "./umpinsemailtext.txt" > /dev/null 2>&1
+rm "./umpinsumpirereport.csv" > /dev/null 2>&1
 
 printf "Exiting the Script.\n"
 exit 0
