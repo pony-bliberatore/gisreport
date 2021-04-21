@@ -52,10 +52,10 @@ printf "Please find attached the latest report for Umpire Insurance Sales from P
 printf "\n" >> "./umpinsemailtext.txt"
 printf "PONY Tech Support\n" >> "./umpinsemailtext.txt"
 
-# Send email to GIS with attachment
+# Send email with attachment
 printf "Emailing the file to GIS.\n"
 filenamedate=$(date +%Y%m%d)
-mutt -s "PONY Umpire Report $filenamedate" pony@mestmaker.com -c b.liberatore@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
+mutt -s "PONY Umpire Report $filenamedate" pony@mestmaker.com -b b.liberatore@pony.org -c accounting@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
 # mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
 
 # Cleanup nasty temp files
