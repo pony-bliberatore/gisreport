@@ -1,6 +1,18 @@
 #!/bin/bash
 # Coding by Brent J. Liberatore - b.liberatore@pony.org
 
+#Define printf colors for use in the script
+#Example - printf "$red" "Exiting the script"
+red='\e[1;31m%s\e[0m\n'
+green='\e[1;32m%s\e[0m\n'
+yellow='\e[1;33m%s\e[0m\n'
+blue='\e[1;34m%s\e[0m\n'
+magenta='\e[1;35m%s\e[0m\n'
+cyan='\e[1;36m%s\e[0m\n'
+
+#Clear the screen
+clear
+
 # Cleanup nasty temp files
 printf "Precleaning all the Umpire Insurance temporary files.\n"
 rm "./UmpireListExport.csv" > /dev/null 2>&1
@@ -10,7 +22,7 @@ rm "./UmpireListExport-temppt2.csv" > /dev/null 2>&1
 rm "./umpinsemailtext.txt" > /dev/null 2>&1
 rm "./umpinsumpirereport.csv" > /dev/null 2>&1
 
-printf "Starting Umpire Insurance Report Script.\n"
+printf "$cyan" "Starting Umpire Insurance Report Script."
 
 #Download Umpire Data to local CSV file for processing
 ~/bin/gam/gam user b.liberatore@pony.org get drivefile id 1EqGMnyitYCMjS1IcmwaIuS16OBxMunmIMS9l7WSl21s format csv targetfolder .
@@ -27,7 +39,7 @@ case "${unameOut}" in
     MINGW*)     machine=MinGw;;
     *)          machine="UNKNOWN:${unameOut}"
 esac
-printf "The script is running on $machine\n"
+printf "$cyan" "The script is running on $machine."
 if [ "$machine" == "Mac" ]
     then sed -i '' '1d' "./UmpireListExport-temp.csv"
 printf "Processed with the sed Mac variant.\n"
@@ -47,19 +59,19 @@ awk -F, '$11 ~ /Yes/ && $15 ~ /Paid/ {print}' "./UmpireListExport-temp.csv" > ".
 cat "./UmpireListExport-temppt1.csv" "./UmpireListExport-temppt2.csv" > "./umpinsumpirereport.csv"
 
 # Create temporary file with text for email.
-printf "Generating Email Content Temporary File.\n"
+printf "$cyan" "Generating Email Content Temporary File."
 printf "Please find attached the latest report for Umpire Insurance Sales from PONY Baseball and Softball.\n" >> "./umpinsemailtext.txt"
 printf "\n" >> "./umpinsemailtext.txt"
 printf "PONY Tech Support\n" >> "./umpinsemailtext.txt"
 
 # Send email with attachment
-printf "Emailing the file to GIS.\n"
+printf "Emailing the file to Mestmaker & Accounting.\n"
 filenamedate=$(date +%Y%m%d)
 mutt -s "PONY Umpire Report $filenamedate" pony@mestmaker.com -b b.liberatore@pony.org -c accounting@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
 # mutt -s "PONY Umpire Report $filenamedate" b.liberatore@pony.org -c b.liberatore@pony.org < "./umpinsemailtext.txt" -a "./umpinsumpirereport.csv"
 
 # Cleanup nasty temp files
-printf "Postcleaning all the Umpire Insurance temporary files.\n"
+printf "$cyan" "Postcleaning all the Umpire Insurance temporary files."
 rm "./UmpireListExport.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temp.csv" > /dev/null 2>&1
 rm "./UmpireListExport-temppt1.csv" > /dev/null 2>&1
